@@ -1,11 +1,18 @@
-    <h1 style="text-align: center;font-size: 200%;color:rgb(0, 256, 0); ">FORMULÁRIO SOBRE ALIMENTAÇÃO</h1>
-   <h1 style="text-align: center;font-size: 160%; color:rgb(256, 256, 256); ">(A) NUNCA (B) RARAMENTE (C) MUITAS VEZES (D) SEMPRE</h1>
-    <div style="background-color: #006400;color:aquamarine;text-align: center;">
-        <h4>1-	Quando faço pequenos lanches ao longo do dia, costumo comer frutas ou castanhas.</h4>
-        <input type="radio" name="Pergunta1" class="opção1-13" value="0">A
-        <input type="radio" name="Pergunta1" class="opção1-13" value="1">B
-        <input type="radio" name="Pergunta1" class="opção1-13" value="2">C
-        <input type="radio" name="Pergunta1" class="opção1-13"value="3">D
+<div class="container mt-2" style="background-color: #006400; padding: 20px; border-radius: 10px;">
+  {{#each erros}}
+    <div class="alert alert-danger">{{texto}}</div>
+  {{/each}}
+
+  <h1 style="text-align: center; font-size: 200%; color: aquamarine;">FORMULÁRIO SOBRE ALIMENTAÇÃO</h1>
+  <h2 style="text-align: center; font-size: 160%; color: #fff;">(A) NUNCA (B) RARAMENTE (C) MUITAS VEZES (D) SEMPRE</h2>
+
+  <form action="" method="post">
+    <div style="background-color: #006400; color: aquamarine; text-align: center;">
+      <h4>1- Quando faço pequenos lanches ao longo do dia, costumo comer frutas ou castanhas.</h4>
+      <input type="radio" name="Pergunta1" class="opção1-13" value="0">A
+      <input type="radio" name="Pergunta1" class="opção1-13" value="1">B
+      <input type="radio" name="Pergunta1" class="opção1-13" value="2">C
+      <input type="radio" name="Pergunta1" class="opção1-13" value="3">D
         <h4>2-	Quando escolho frutas, verduras e legumes, dou preferência para aqueles que são de produção local. </h4>
         <input type="radio" name="Pergunta2" class="opção1-13" value="0">A
         <input type="radio" name="Pergunta2" class="opção1-13" value="1">B
@@ -121,21 +128,8 @@
         <input type="radio" name="Pergunta24" class="opção14-24" value="2">B
         <input type="radio" name="Pergunta24" class="opção14-24" value="1">C
         <input type="radio" name="Pergunta24" class="opção14-24"value="0">D
-        <br><br><button type="button" id="btnAdd">calcular</button>
-
+        <br><br><button type="submit" class="btn btn-success">Enviar</button>
+    </div>
+</form>
    
 </div>
-    <hr/>
-    <div id="divdano" style="font-size:200%;color:aquamarine;text-shadow: #a52a2a;margin:2%">
-        Zona de resultado
-    </div>
-    <div id="Recomendações" style="font-size:200%;color:rgb(0, 0, 0);text-shadow: #86a52a;margin:5%; background-image: linear-gradient(aquamarine, rgb(9, 255, 0))">
-        <p style="text-align: center;color:rgb(39, 123, 0); ">Recomendações</p>
-        <img src="Recomendações para uma alimentação mais saudavel.png" width="415" height="500">
-        <img src="1-2.png" width="440" height="500">
-        <img src="3-4.png" width="440" height="500">
-    </div>
-    <div id="divfeed" style="font-size:200%;color:aquamarine;text-shadow: #a52a2a;margin:2%">
-        feedback
-    </div>
-    <script src="index.js"></script>
