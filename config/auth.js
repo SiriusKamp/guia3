@@ -1,40 +1,48 @@
-const localStrategy = require("passport-local").Strategy;
+// passport.js
+
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-require("../models/admin");
+
 const Admin = mongoose.model("admins");
 
-module.exports = function (passport) {
-  passport.use(
-    new localStrategy(
-      { usernameField: "email", passwordField: "senha" },
-      (email, senha, done) => {
-        Admin.findOne({ email: email }).then((user) => {
-          if (!user) {
-            return done(null, false, { message: "Esta conta não existe" });
-          }
-          bcrypt.compare(senha, user.senha, (erro, batem) => {
-            if (batem) {
-              return done(null, user);
-            } else {
-              return done(null, false, { message: "Senha incorreta" });
-            }
-          });
-        });
-      }
-    )
-  );
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
 
-  passport.serializeUser((user, done) => {
-    done(null, user.id);
-  });
-  passport.deserializeUser((id, done) => {
-    Admin.findById(id)
-      .then((user) => {
-        done(null, user);
-      })
-      .catch((err) => {
-        done(err, null);
-      });
-  });
-};
+passport.deserializeUser((id, done) => {
+  Admin.findById(id)
+    .then((user) => {
+      done(null, user);
+    })
+    .catch((err) => {
+      done(err, null);
+    });
+});
+
+passport.use(
+  new LocalStrategy(
+    { usernameField: "nome", passwordField: false },
+    (nome, done) => {
+      console.log("Entrando na estratégia de autenticação");
+      Admin.findOne({ nome: nome })
+        .then((user) => {
+          console.log("Encontrou usuário:", user);
+          if (!user) {
+            return done(null, false, { message: "Usuário não encontrado." });
+          }
+
+          // Lógica para autenticar sem senha, se necessário
+
+          console.log("Autenticado com sucesso");
+          return done(null, user);
+        })
+        .catch((err) => {
+          console.error("Erro na autenticação:", err);
+          done(err, null);
+        });
+    }
+  )
+);
+
+module.exports = passport;

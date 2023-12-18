@@ -2,26 +2,26 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const ExcelJS = require("exceljs");
-const { eAdmin } = require("../helpers/eAdmin");
 const { format, parseISO, getYear } = require("date-fns");
 const ptBR = require("date-fns/locale/pt-BR");
+require("../models/admin");
 const Admin = mongoose.model("admins");
-const crypto = require("crypto");
 
-router.get("/exportar-admins", eAdmin, async (req, res) => {
+router.get("/exportar-admins", async (req, res) => {
   try {
-    // Verifique se um ano de nascimento foi fornecido
-    const { anoNascimento } = req.query;
+    // Verifique se uma data de criação foi fornecida
+    const { datacriacao } = req.query;
     let filtro = {};
 
-    if (anoNascimento) {
-      // Converta o ano fornecido para uma data no formato ISO
-      const dataInicio = new Date(`${anoNascimento}-01-01T00:00:00.000Z`);
-      const dataFim = new Date(`${anoNascimento}-12-31T23:59:59.999Z`);
+    if (datacriacao) {
+      // Converta a data fornecida para uma data no formato ISO
+      const [dia, mes, ano] = datacriacao.split("/");
+      const dataInicio = new Date(ano, mes - 1, dia); // Mês em JavaScript é 0-indexed
+      const dataFim = new Date(ano, mes - 1, dia, 23, 59, 59, 999);
 
       // Filtre pelo intervalo de datas
       filtro = {
-        nascimento: {
+        datacriacao: {
           $gte: dataInicio,
           $lte: dataFim,
         },
@@ -29,22 +29,22 @@ router.get("/exportar-admins", eAdmin, async (req, res) => {
     }
 
     // Busque os admins no banco de dados usando o filtro
-    const admins = await Admin.find(filtro).sort({ nascimento: "desc" });
+    const admins = await Admin.find(filtro).sort({ datacriacao: "desc" });
 
     // Crie um novo workbook Excel
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet("Admins");
 
     // Adicione cabeçalhos
-    const cabecalhos = ["Email", "Data de Nascimento", "Pontuação"];
+    const cabecalhos = ["Data de Nascimento", "Pontuação", "Data de Criação"];
     sheet.addRow(cabecalhos);
 
     // Adicione dados
     admins.forEach((admin) => {
       const linha = [
-        admin.email,
         format(new Date(admin.nascimento), "dd/MM/yyyy", { locale: ptBR }),
         admin.pontuacao,
+        format(new Date(admin.datacriacao), "dd/MM/yyyy", { locale: ptBR }),
       ];
       sheet.addRow(linha);
     });
@@ -59,19 +59,22 @@ router.get("/exportar-admins", eAdmin, async (req, res) => {
 
     console.log("Exportação concluída com sucesso");
   } catch (err) {
-    console.error("Erro ao exportar admins:", err);
-    res.status(500).send("Erro ao exportar admins");
+    req.flash("error_msg", "coloque a data no formato aa/mm/aaaa");
+    res.redirect("/admin/");
   }
 });
 
-router.get("/", eAdmin, function (req, res) {
+router.get("/", function (req, res) {
   Admin.find()
-    .sort({ nascimento: "desc" })
+    .sort({ datacriacao: "desc" })
     .then((admins) => {
-      // Mapeia os admins formatando a data de nascimento
+      // Mapeia os admins formatando a data de criação
       const formattedAdmins = admins.map((admin) => ({
         ...admin._doc,
         nascimento: format(new Date(admin.nascimento), "dd/MM/yyyy", {
+          locale: ptBR,
+        }),
+        datacriacao: format(new Date(admin.datacriacao), "dd/MM/yyyy", {
           locale: ptBR,
         }),
       }));
@@ -85,74 +88,48 @@ router.get("/", eAdmin, function (req, res) {
     });
 });
 
-router.post("/homeadm/delete", eAdmin, function (req, res) {
-  Admin.remove({ _id: req.body.id })
-    .then(() => {
-      req.flash("success_msg", "Admin deletado");
-      res.redirect("/admin/");
-    })
-    .catch((err) => {
-      req.flash("error_msg", "este usuario não existe");
-      res.redirect("/admin/");
-      console.log(err);
-    });
-});
-
-router.post("/remover-nao-confirmados", async (req, res) => {
+router.post("/homeadm/delete", async function (req, res) {
+  const adminId = req.body.id;
+  console.log(adminId);
   try {
-    // Remova todos os usuários não confirmados
-    await Admin.deleteMany({ isConfirmed: false });
+    // Use deleteOne em vez de remove
+    const result = await Admin.deleteOne({ _id: adminId });
 
-    req.flash("success_msg", "Usuários não confirmados removidos com sucesso");
+    if (result.deletedCount === 0) {
+      req.flash("error_msg", "Este usuário não existe");
+    } else {
+      req.flash("success_msg", "Admin deletado com sucesso");
+    }
+
     res.redirect("/admin/");
-  } catch (error) {
-    console.error(error);
-    req.flash("error_msg", "Houve um erro ao remover usuários não confirmados");
+  } catch (err) {
+    console.error(err);
+    req.flash("error_msg", "Erro ao excluir admin");
     res.redirect("/admin/");
   }
 });
 
-// Rota para transformar um usuário em admin
-router.post("/tornar-admin", eAdmin, async (req, res) => {
-  const adminId = req.body.id;
-
+router.post("/excluir-usuarios-negativos", async function (req, res) {
   try {
-    // Encontrar o admin pelo ID e atualizar as permissões
-    const admin = await Admin.findByIdAndUpdate(adminId, { permitions: 1 });
+    // Use deleteMany para excluir vários documentos que atendem ao critério
+    const result = await Admin.deleteMany({ pontuacao: -1 });
 
-    if (!admin) {
-      console.error(err);
-      req.flash("error_msg", "Admin não encontrado");
-      return res.redirect("/admin/");
+    if (result.deletedCount === 0) {
+      req.flash(
+        "error_msg",
+        "Não foram encontrados usuários com -1 ponto para excluir"
+      );
+    } else {
+      req.flash(
+        "success_msg",
+        "Usuários com -1 ponto foram excluídos com sucesso"
+      );
     }
 
-    req.flash("success_msg", "Usuário tornou-se admin com sucesso");
     res.redirect("/admin/");
   } catch (err) {
     console.error(err);
-    req.flash("error_msg", "Houve um erro ao tornar o usuário um admin");
-    res.redirect("/admin/");
-  }
-});
-
-router.post("/remover-admin", eAdmin, async (req, res) => {
-  const adminId = req.body.id;
-
-  try {
-    // Encontrar o admin pelo ID e atualizar as permissões
-    const admin = await Admin.findByIdAndUpdate(adminId, { permitions: 0 });
-
-    if (!admin) {
-      console.error(err);
-      req.flash("error_msg", "Admin não encontrado");
-      return res.redirect("/admin/");
-    }
-
-    req.flash("success_msg", "Permissões removidas com sucesso");
-    res.redirect("/admin/");
-  } catch (err) {
-    console.error(err);
-    req.flash("error_msg", "Houve um erro ao remover permissões");
+    req.flash("error_msg", "Erro ao excluir usuários com -1 ponto");
     res.redirect("/admin/");
   }
 });

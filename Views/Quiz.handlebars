@@ -1,0 +1,168 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seu Quiz</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 75%;
+            margin: auto;
+            padding: 1%;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-wrapper {
+            max-width: 1250px; /* Ajuste conforme necessário */
+            margin: auto;
+        }
+
+        .progress-container {
+            display: flex;
+            align-items: left;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            height: 5%;
+        }
+
+        .progress-item,
+        .progress-bar-container {
+            flex: 1;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background-color: #4caf50;
+            border-radius: 10px;
+            transition: width 0.3s ease-in-out;
+        }
+
+        form {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button img {
+            vertical-align: middle;
+        }
+
+        .opcao-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+
+        .opcao-coluna {
+            width: 50%;
+            margin-bottom: 10px;
+        }
+
+        .opcao-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .opcao-imagem {
+            width: 40%;
+            height: auto;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+
+        .opcao-texto {
+            color: #333;
+            font-size: 150%;
+        }
+
+        @media (max-width: 768px) {
+            .opcao-coluna {
+                width: 100%;
+            }
+
+            .opcao-imagem {
+                width: 30%;
+            }
+
+            .progress-bar-container {
+                flex: 2;
+            }
+        }
+    </style>
+</head>
+
+{{#ifCond perguntaid ">" 0}}
+    <div class="container progress-container">
+        <form action="/quiz/{{PerguntaAnterior}}/voltar" method="post" class="progress-item">
+            <button type="submit" class="btn btn-success">
+                <img src="/img/green-neon-arrow-4.png" width="30px" height="20px" alt="Voltar">
+            </button>
+        </form>
+        <div class="progress-item progress-bar-container">
+            <p>{{proximaPerguntaId}}/{{MAX_PERGUNTAS}}</p>
+            <div class="progress-bar" style="width: {{progresso}}%;"></div>
+        </div>
+    </div>
+{{/ifCond}}
+
+<div class="container content-wrapper">
+    <form id="quizForm" action="/quiz/{{perguntaid}}" method="post">
+        <h2>{{pergunta.pergunta}}</h2>
+
+        <div class="opcao-container">
+            {{#each pergunta.opcoes}}
+                <div class="opcao-coluna">
+                    <div class="opcao-container">
+                        <label>
+                            <input type="radio" name="resposta" value="{{valor}}">
+                            <div class="opcao-info">
+                                <img src="{{imagem.src}}" class="opcao-imagem">
+                                <span class="opcao-texto">{{texto}}</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('quizForm');
+        const radioInputs = form.querySelectorAll('input[type=radio]');
+
+        radioInputs.forEach(function (input) {
+            input.addEventListener('change', function () {
+                form.submit();
+            });
+        });
+    });
+</script>
