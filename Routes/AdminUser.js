@@ -24,7 +24,7 @@ router.post("/registro", async (req, res) => {
       .filter((palavra) => palavra.trim() !== "");
 
     if (palavrasNoNome.length < 3) {
-      erros.push({ texto: "O nome deve conter pelo menos duas palavras" });
+      erros.push({ texto: "O nome deve conter pelo menos tres palavras" });
     }
 
     if (erros.length > 0) {

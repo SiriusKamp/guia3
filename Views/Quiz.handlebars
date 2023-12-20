@@ -81,8 +81,10 @@
 
 
         .opcao-coluna {
-            width: 50%;
+            width: 49%;
             margin-bottom: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);background-color: white;
+            border-radius: 10px;
         }
 
         .opcao-info {
@@ -153,7 +155,9 @@
         </div>
     </form>
 </div>
-
+<form action="/adminuser/logout" method="POST">
+        <button type="submit" class="btn btn-danger mt-2">DESISTIR</button>
+    </form>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const form = document.getElementById('quizForm');
