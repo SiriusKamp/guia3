@@ -130,7 +130,7 @@ const perguntas = [
     pergunta:
       "Quando escolhemos frutas, verduras e legumes, dou preferência para aqueles que são de produção local.",
     opcoes: [
-      { texto: "Nunca", valor: 3, imagem: { src: "/img/X.jpg" } },
+      { texto: "Nunca", valor: 0, imagem: { src: "/img/X.jpg" } },
       { texto: "Sempre", valor: 3, imagem: { src: "/img/LocalFarmer3.jpg" } },
       {
         texto: "Raramente",
@@ -147,7 +147,7 @@ const perguntas = [
   {
     pergunta: "Em casa comemos mais alimentos orgânicos.",
     opcoes: [
-      { texto: "Nunca", valor: 3, imagem: { src: "/img/X.jpg" } },
+      { texto: "Nunca", valor: 0, imagem: { src: "/img/X.jpg" } },
       { texto: "Sempre", valor: 3, imagem: { src: "/img/Oganico3.jpg" } },
       {
         texto: "Raramente",
@@ -165,7 +165,7 @@ const perguntas = [
     pergunta:
       "Costumo levar algum alimento comigo em caso de sentir fome ao longo do dia.",
     opcoes: [
-      { texto: "Nunca", valor: 3, imagem: { src: "/img/X.jpg" } },
+      { texto: "Nunca", valor: 0, imagem: { src: "/img/X.jpg" } },
       { texto: "Sempre", valor: 3, imagem: { src: "/img/criancafruta3.jpg" } },
       {
         texto: "Raramente",
@@ -182,7 +182,7 @@ const perguntas = [
   {
     pergunta: "Costumo planejar as refeições que farei no dia.",
     opcoes: [
-      { texto: "Nunca", valor: 3, imagem: { src: "/img/X.jpg" } },
+      { texto: "Nunca", valor: 0, imagem: { src: "/img/X.jpg" } },
       { texto: "Sempre", valor: 3, imagem: { src: "/img/planejar3.jpg" } },
       {
         texto: "Raramente",
@@ -200,7 +200,7 @@ const perguntas = [
     pergunta:
       "Costumo variar o consumo de feijão por ervilha, lentilha ou grão de bico.",
     opcoes: [
-      { texto: "Nunca", valor: 3, imagem: { src: "/img/X.jpg" } },
+      { texto: "Nunca", valor: 0, imagem: { src: "/img/X.jpg" } },
       { texto: "Sempre", valor: 3, imagem: { src: "/img/grãos.avif" } },
       {
         texto: "Raramente",
@@ -213,7 +213,7 @@ const perguntas = [
   {
     pergunta: "Na minha casa usamos farinha de trigo integral",
     opcoes: [
-      { texto: "Nunca", valor: 3, imagem: { src: "/img/X.jpg" } },
+      { texto: "Nunca", valor: 0, imagem: { src: "/img/X.jpg" } },
       { texto: "Sempre", valor: 3, imagem: { src: "/img/farinha3.jpg" } },
       {
         texto: "Raramente",
@@ -226,7 +226,7 @@ const perguntas = [
   {
     pergunta: "Costumo comer fruta no café da manhã.",
     opcoes: [
-      { texto: "Nunca", valor: 3, imagem: { src: "/img/X.jpg" } },
+      { texto: "Nunca", valor: 0, imagem: { src: "/img/X.jpg" } },
       { texto: "Sempre", valor: 3, imagem: { src: "/img/fruta3.avif" } },
       {
         texto: "Raramente",
@@ -256,7 +256,7 @@ const perguntas = [
   {
     pergunta: "Costumo participar do preparo dos alimentos na minha casa.",
     opcoes: [
-      { texto: "Nunca", valor: 3, imagem: { src: "/img/X.jpg" } },
+      { texto: "Nunca", valor: 0, imagem: { src: "/img/X.jpg" } },
       { texto: "Sempre", valor: 3, imagem: { src: "/img/participar3.jpg" } },
       {
         texto: "Raramente",
@@ -274,7 +274,7 @@ const perguntas = [
     pergunta:
       "Na minha casa compartilhamos as tarefas que envolvem o preparo e consumo das refeições.",
     opcoes: [
-      { texto: "Nunca", valor: 3, imagem: { src: "/img/X.jpg" } },
+      { texto: "Nunca", valor: 0, imagem: { src: "/img/X.jpg" } },
       { texto: "Sempre", valor: 3, imagem: { src: "/img/participar3.jpg" } },
       {
         texto: "Raramente",
@@ -292,7 +292,7 @@ const perguntas = [
     pergunta:
       "Em minha casa é comum comprar alimentos em feiras livres ou feiras de rua.",
     opcoes: [
-      { texto: "Nunca", valor: 3, imagem: { src: "/img/X.jpg" } },
+      { texto: "Nunca", valor: 0, imagem: { src: "/img/X.jpg" } },
       { texto: "Sempre", valor: 3, imagem: { src: "/img/feira.avif" } },
       {
         texto: "Raramente",
